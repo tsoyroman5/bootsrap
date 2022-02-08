@@ -25,12 +25,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserRepository userRepository;
+    public UserService userService;
+
+    @Autowired
+    public RoleService roleService;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findUserByUsername(username);
+        Optional<User> optionalUser = userService.findUserByUsername(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
@@ -44,7 +47,34 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .password(passwordEncoder.encode(user.getPassword()))
                     .roles(roleList.toArray(new String[0]))
                     .build();
-        } else {
+        }
+        else {
+//            Role role_admin = new Role("ADMIN");
+//            Role role_user = new Role("USER");
+//
+//            roleService.addRole(role_admin);
+//            roleService.addRole(role_admin);
+//
+//            List<Role> rolesAdmin = new ArrayList<>();
+//            rolesAdmin.add(role_user);
+//            rolesAdmin.add(role_admin);
+//
+//            List<Role> rolesUser = new ArrayList<>();
+//            rolesUser.add(role_user);
+//
+//
+//            User defaultAdmin = new User();
+//            defaultAdmin.setUsername("admin");
+//            defaultAdmin.setPassword("admin");
+//            defaultAdmin.setRoles(rolesAdmin);
+//
+//            User defaultUser = new User();
+//            defaultUser.setUsername("user");
+//            defaultUser.setPassword("user");
+//            defaultUser.setRoles(rolesUser);
+//            userService.addUser(defaultAdmin);
+//            userService.addUser(defaultUser);
+
             throw new UsernameNotFoundException("User Name is not Found");
         }
     }

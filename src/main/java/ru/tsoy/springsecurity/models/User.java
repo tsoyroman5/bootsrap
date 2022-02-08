@@ -1,7 +1,10 @@
 package ru.tsoy.springsecurity.models;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.tsoy.springsecurity.repository.RoleRepository;
+import ru.tsoy.springsecurity.service.RoleService;
+import ru.tsoy.springsecurity.service.RoleServiceImpl;
+
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -11,6 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails{
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -22,14 +27,13 @@ public class User implements UserDetails{
     private String username;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable (
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private List<Role> roles;
-
 
     public User() {
     }
@@ -42,6 +46,14 @@ public class User implements UserDetails{
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -67,6 +79,10 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -101,11 +117,6 @@ public class User implements UserDetails{
         this.age = age;
     }
 
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
@@ -113,4 +124,5 @@ public class User implements UserDetails{
     public List<Role> getRoles() {
         return roles;
     }
+
 }

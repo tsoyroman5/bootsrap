@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.tsoy.springsecurity.models.User;
 import ru.tsoy.springsecurity.repository.UserRepository;
-
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,6 +33,5 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
-    }
+        return userRepository.findUserByUsername(username);}
 }
