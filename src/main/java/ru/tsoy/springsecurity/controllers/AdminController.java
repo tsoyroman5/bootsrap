@@ -28,8 +28,7 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String createUser(@Valid User user, BindingResult result,
-                             @RequestParam("roles") List<String> roles) {
+    public String createUser(@Valid User user, BindingResult result, @RequestParam("roles") List<String> roles) {
         if (result.hasErrors()) {
             return "addUser";
         }
