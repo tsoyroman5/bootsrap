@@ -1,23 +1,18 @@
 package ru.tsoy.springsecurity.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.tsoy.springsecurity.repository.RoleRepository;
-import ru.tsoy.springsecurity.service.RoleService;
-import ru.tsoy.springsecurity.service.RoleServiceImpl;
-
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails{
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String surname;
@@ -27,16 +22,16 @@ public class User implements UserDetails{
     private String username;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.REFRESH)
     @JoinTable (
             name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
+    private Set<Role> roles;
 
-    public User() {
-    }
+    public User() {}
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,14 +43,6 @@ public class User implements UserDetails{
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public String getUsername() {
         return username;
@@ -63,33 +50,29 @@ public class User implements UserDetails{
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -117,12 +100,27 @@ public class User implements UserDetails{
         this.age = age;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public List<Role> getRoles() {
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
         return roles;
     }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String rolesToString() {
+        StringBuilder result = new StringBuilder();
+        for (Role role : getRoles()) {
+            result.append(role.toString()).append(" ");
+        }
+        return result.substring(0, result.length()-1);
+    }
 }

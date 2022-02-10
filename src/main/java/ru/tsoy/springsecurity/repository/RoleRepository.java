@@ -1,10 +1,8 @@
 package ru.tsoy.springsecurity.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.tsoy.springsecurity.models.Role;
 
-import java.util.List;
-
-public interface RoleRepository extends CrudRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findRoleByName(String name);
 }

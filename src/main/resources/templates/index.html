@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       lang="en">
 <head>
     <!-- Required meta tags -->
@@ -33,16 +32,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
-            <td th:utext="${user.getId()}">...</td>
-            <td th:utext="${user.getName()}">...</td>
-            <td th:utext="${user.getSurname()}">...</td>
-            <td th:utext="${user.getAge()}">...</td>
-            <td th:utext="${user.getUsername()}">...</td>
-            <td th:utext="${user.getPassword()}">...</td>
-            <td th:utext="${user.getRoles()}">...</td>
-            <td><a th:href="@{admin/edit/{id}(id=${user.id})}">Edit</a></td>
-            <td><a th:href="@{admin/delete/{id}(id=${user.id})}">Delete</a></td>
+        <tr th:each="user : ${userList}">
+            <td th:utext="${user.id}">...</td>
+            <td th:utext="${user.name}">...</td>
+            <td th:utext="${user.surname}">...</td>
+            <td th:utext="${user.age}">...</td>
+            <td th:utext="${user.username}">...</td>
+            <td th:utext="${user.password}">...</td>
+            <td th:utext="${user.rolesToString()}">...</td>
+            <td><a th:href="@{admin/edit/{id} (id=${user.id})}">Edit</a></td>
+            <td><a th:href="@{admin/delete/{id} (id=${user.id})}">Delete</a></td>
         </tr>
         </tbody>
     </table>

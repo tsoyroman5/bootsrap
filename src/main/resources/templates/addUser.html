@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -29,10 +30,10 @@
     <br/>
     <p>
         <label>Roles:
-            <input type="checkbox" name="roles"
+            <input type="checkbox" name="roleNames"
                    th:each="role : ${allRoles}"
-                   th:text="${role.getAuthority()}"
-                   th:value="${role.getAuthority()}"/>
+                   th:text="${role.name}"
+                   th:value="${role.name}"/>
         </label>
     </p>
     <input type="submit" value="Add user"/>

@@ -10,9 +10,9 @@
     <title>Update user</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/admin/{id}(id=${user.id})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin/{id}(id=${user.id})}" th:object="${user}">
     <label for="name">Enter name: </label>
-    <input type="text" th:field="*{name}" id="name"/>
+    <input type="text" th:field="*{name}" id="name">
     <br/>
     <label for="surname">Enter surname: </label>
     <input type="text" th:field="*{surname}" id="surname"/>
@@ -20,7 +20,21 @@
     <label for="age">Enter age: </label>
     <input type="text" th:field="*{age}" id="age">
     <br/>
-    <input type="submit" value="Update user"/>
+    <label for="username">Enter username: </label>
+    <input type="text" th:field="*{username}" id="username">
+    <br/>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" id="password">
+    <br/>
+    <p>
+        <label>Roles:
+            <input type="checkbox" name="roleNames"
+                   th:each="role : ${allRoles}"
+                   th:text="${role.name}"
+                   th:value="${role.name}"/>
+        </label>
+    </p>
+    <input type="submit" value="Add user"/>
     <br/>
 </form>
 <br/>

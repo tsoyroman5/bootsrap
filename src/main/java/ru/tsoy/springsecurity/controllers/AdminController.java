@@ -15,11 +15,14 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public AdminController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
     @GetMapping("/addUser")
     public String addUser(@ModelAttribute("user") User user, Model model) {
@@ -28,43 +31,43 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String createUser(@Valid User user, BindingResult result, @RequestParam("roles") List<String> roles) {
+    public String createUser(@Valid User user, BindingResult result, @RequestParam("roleNames") List<String> roleNames) {
         if (result.hasErrors()) {
             return "addUser";
         }
-        user.setRoles(roleService.findRolesByNames(roles));
+        user.setRoles(roleService.findRolesByNames(roleNames));
         userService.addUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("users", userService.userList());
+        model.addAttribute("userList", userService.userList());
         return "index";
     }
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.findById(id).get());
+        model.addAttribute("user", userService.findUserById(id));
+        model.addAttribute("allRoles", roleService.roleList());
         return "updateUser";
     }
 
-    //Change update method, cuz login and password r becoming null.
+    //
     @PostMapping("/{id}")
-    public String updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result) {
+    public String updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result, @RequestParam("roleNames") List<String> roleNames) {
         if (result.hasErrors()) {
             user.setId(id);
             return "updateUser";
         }
+        user.setRoles(roleService.findRolesByNames(roleNames));
         userService.addUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id) {
-        User user = userService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
-        userService.deleteUser(user);
+        userService.deleteUser(id);
         return "redirect:/admin";
     }
 }

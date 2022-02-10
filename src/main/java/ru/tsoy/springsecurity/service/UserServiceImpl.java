@@ -4,12 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.tsoy.springsecurity.models.User;
 import ru.tsoy.springsecurity.repository.UserRepository;
-import java.util.Optional;
+import java.util.List;
+
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void addUser(User user) {
@@ -17,21 +23,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<User> userList() {
+    public List<User> userList() {
         return userRepository.findAll();
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return userRepository.findById(id);
+    public User findUserById(long id) {
+        return userRepository.findUserById(id);
     }
 
     @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public void deleteUser(long id) {
+        userRepository.delete(userRepository.findUserById(id));
     }
 
     @Override
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);}
+    public User findUserByUsername(String username) {return userRepository.findUserByUsername(username);}
 }

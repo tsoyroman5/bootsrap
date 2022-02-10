@@ -2,12 +2,14 @@ package ru.tsoy.springsecurity.service;
 
 import ru.tsoy.springsecurity.models.User;
 
-import java.util.Optional;
+import java.util.List;
+
 
 public interface UserService {
     void addUser(User user);
-    Iterable<User> userList();
-    Optional<User> findById(long id);
-    void deleteUser(User user);
-    Optional<User> findUserByUsername(String username);
+    List<User> userList();
+    User findUserById(long id);
+    void deleteUser(long id);
+    User findUserByUsername(String username);
+
 }
