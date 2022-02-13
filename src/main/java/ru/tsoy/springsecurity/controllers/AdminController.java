@@ -1,6 +1,7 @@
 package ru.tsoy.springsecurity.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.tsoy.springsecurity.models.User;
 import ru.tsoy.springsecurity.service.RoleService;
 import ru.tsoy.springsecurity.service.UserService;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,42 +26,30 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/addUser")
-    public String addUser(@ModelAttribute("user") User user, Model model) {
+
+    @GetMapping()
+    public String index(@ModelAttribute("newUser") User user, Model model) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        model.addAttribute("userList", userService.userList());
+        model.addAttribute("user", userService.findUserByUsername(name));
         model.addAttribute("allRoles", roleService.roleList());
-        return "addUser";
+
+        return "index";
     }
 
     @PostMapping()
     public String createUser(@Valid User user, BindingResult result, @RequestParam("roleNames") List<String> roleNames) {
         if (result.hasErrors()) {
-            return "addUser";
+            return "index";
         }
         user.setRoles(roleService.findRolesByNames(roleNames));
         userService.addUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("userList", userService.userList());
-        return "index";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.findUserById(id));
-        model.addAttribute("allRoles", roleService.roleList());
-        return "updateUser";
-    }
-
-    //
     @PostMapping("/{id}")
-    public String updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result, @RequestParam("roleNames") List<String> roleNames) {
-        if (result.hasErrors()) {
-            user.setId(id);
-            return "updateUser";
-        }
+    public String updateUser(@Valid User user, @RequestParam("roleNames") List<String> roleNames) {
         user.setRoles(roleService.findRolesByNames(roleNames));
         userService.addUser(user);
         return "redirect:/admin";
